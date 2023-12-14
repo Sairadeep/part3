@@ -26,7 +26,6 @@ class MyPart3Service : Service() {
         super.onCreate()
     }
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d("part3Service", "part3Service started from part3.")
         handler.post(periodicRunnable)
         return super.onStartCommand(intent, flags, startId)
     }
@@ -43,14 +42,12 @@ class MyPart3Service : Service() {
     private val part2Connect = object : ServiceConnection {
         @SuppressLint("LongLogTag")
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Log.d("part3ServiceConnectionStatus", "Service is connected.")
             aidlInterface = ITwoAidlInterface.Stub.asInterface(service)
             part2Conn()
 
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            Log.d("part3ServiceConnectionStatus", "Service is disconnected.")
             unbindService(this)
         }
 
@@ -66,15 +63,12 @@ class MyPart3Service : Service() {
         val nameToReverse = aidlInterface?.sendNameTo3()
         if (nameToReverse != "Default Part1") {
             val reverseOfIt = nameToReverse?.reversed()
-            Log.d("part3Service", "nameToReverse: $nameToReverse")
-            Log.d("part3Service", "Reversed Name: $reverseOfIt")
             if (nameToReverse.equals(
                     reverseOfIt,
                     true
                 )
             ) {
                 aidlInterface?.callBack(1)
-                Log.d("part3Service", "Palindrome........................!")
             } else aidlInterface?.callBack(0)
         } else Log.d("part3Service", "Haven't got input yet...!")
     }
